@@ -1,0 +1,455 @@
+{
+  "name": "Project 2 BBC Tech News Discord Notifier",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Post Link",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -736,
+        -208
+      ],
+      "id": "229e5b10-fd5e-4753-b1ba-3d39eab7b096",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "executeOnce": true
+      
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "bbc-tech-news-notifier/1.0"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -1184,
+        -416
+      ],
+      "id": "b14042b0-de55-41f5-93ec-2465527c3b33",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        -208
+      ],
+      "id": "79025263-b029-4335-8a5c-f6e5e9c546e7",
+      "name": "XML"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "46696b41-2164-4088-8ab1-b0af6453ba5c",
+              "leftValue": "={{ $('Get row(s) in sheet').all().map(i => i.json.Link).join(',') }}",
+              "rightValue": "={{ $('Code in Python').first().json.link }}",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        -544
+      ],
+      "id": "d07674e0-c078-429e-8abf-407574e849be",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Post Link",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Post": "={{ $('Code in Python1').item.json.title }}",
+            "Link": "={{ $('Code in Python1').item.json.link }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "Post",
+              "displayName": "Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "application_id",
+              "displayName": "application_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "avatar",
+              "displayName": "avatar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "channel_id",
+              "displayName": "channel_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "guild_id",
+              "displayName": "guild_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "token",
+              "displayName": "token",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        -288
+      ],
+      "id": "98dc7ff9-adc6-4be5-ac87-60598f5a9fff",
+      "name": "Append row in sheet"
+     
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=📰 {{ $json.title }}\n\n🔗 {{ $json.link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -496
+      ],
+      "id": "42985989-6f23-4db5-afcc-36465e90cc62",
+      "name": "Discord",
+      "webhookId": "6b94647a-f2d3-4b77-95d4-74fe3a9bd5a0"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "output_items = []\n\n# Pehle item ka main data lena\nraw_data = _items[0]\n\n# Agar data 'json' key ke andar band ho to usay open karein\nif isinstance(raw_data, dict) and 'json' in raw_data:\n    actual_data = raw_data['json']\nelse:\n    actual_data = raw_data\n\n# RSS se Channel aur wahan se Item list nikalna\nchannel_data = actual_data.get('rss', {}).get('channel', {})\nnews_list = channel_data.get('item', [])\n\n# Agar sirf single news ho to usay bhi list bana lein\nif isinstance(news_list, dict):\n    news_list = [news_list]\n\n# Har news ko loop mein process karna\nfor news in news_list:\n    if isinstance(news, dict):\n        news_item = {\n            \"title\": news.get('title', ''),\n            \"link\": news.get('link', '')\n        }\n        output_items.append({\"json\": news_item})\n\nreturn output_items"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        -400
+      ],
+      "id": "a2e3b29d-d57f-4ac1-96f9-04e9d7779a4d",
+      "name": "Code in Python"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1344,
+        -224
+      ],
+      "id": "fb6db843-532d-4aab-8be1-aa65bd0de5e4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -544,
+        -368
+      ],
+      "id": "bb5cc03c-e1c7-4eb5-966d-f912a87236e4",
+      "name": "Merge",
+      "executeOnce": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "saved_links = set()\nnews_list = []\n\n# Sheet ke records aur feed ki khabrein alag karna\nfor item in _items:\n    data = item.get(\"json\", {})\n\n    # Sheet mein column ka naam capital L wala Link hai\n    if \"Link\" in data:\n        link = str(data.get(\"Link\") or \"\").strip()\n        if link:\n            saved_links.add(link)\n\n    # Pehle Python se small l wala link aata hai\n    elif \"link\" in data:\n        news_list.append(data)\n\noutput_items = []\n\n# Har khabar ko purane links se compare karna\nfor news in news_list:\n    link = str(news.get(\"link\") or \"\").strip()\n\n    if not link or link in saved_links:\n        continue\n\n    output_items.append({\n        \"json\": {\n            \"title\": news.get(\"title\", \"\"),\n            \"link\": link\n        }\n    })\n\n    # Isi feed mein duplicate link dobara na nikle\n    saved_links.add(link)\n\nreturn output_items"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        -272
+      ],
+      "id": "fd9b40af-d06e-4249-813d-d9b118e12856",
+      "name": "Code in Python1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "node": "Code in Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        []
+      ]
+    },
+    "Discord": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in Python1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python1": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "40126e00-920b-424b-bf6b-c1d608af7add",
+ 
+  "nodeGroups": [],
+  "id": "m4A2ktacQUyR8rnC",
+  "tags": []
+}
