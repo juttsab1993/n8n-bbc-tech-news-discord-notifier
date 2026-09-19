@@ -14,6 +14,10 @@ I built this project to practice RSS parsing, Python filtering, and connecting d
 - Saves the title and link after the Discord message is sent.
 - Skips Discord and saving when no new links are found.
 
+## Workflow preview
+
+![BBC Tech News Discord Notifier workflow](workflow.png)
+
 ## How it works
 
 The Schedule Trigger starts the workflow. An HTTP Request fetches the feed, and the XML node converts it into JSON.
